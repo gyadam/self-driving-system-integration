@@ -1,1 +1,3 @@
-self-driving-car-sim-1.45
+self-driving-car-sim-1.45/
+.vscode/
+env/
