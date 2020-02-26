@@ -1,3 +1,7 @@
 self-driving-car-sim-1.45/
 .vscode/
-env/
+venv/
+build/
+devel/
+ros/src/styx/__pycache__/
+ros/src/CMakeLists.txt
