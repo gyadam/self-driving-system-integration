@@ -10,6 +10,9 @@ from light_classification.tl_classifier import TLClassifier
 import tf
 import cv2
 import yaml
+import datetime
+import json
+
 
 STATE_COUNT_THRESHOLD = 3
 
@@ -131,6 +134,12 @@ class TLDetector(object):
             int: ID of traffic light color (specified in styx_msgs/TrafficLight)
 
         """
+        cv_image = self.bridge.imgmsg_to_cv2(self.camera_image, "bgr8")
+        now = datetime.datetime.now()
+        file_suffix = now.isoformat()
+        img_name = 'data-'+file_suffix+'.jpg'
+        cv2.imwrite(img_name, cv_image)
+
         light = None
 
         # List of positions that correspond to the line to stop in front of for a given intersection
