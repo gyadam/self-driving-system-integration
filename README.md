@@ -17,6 +17,29 @@ The project was proudly developed by the following contributors (in alphabetical
 
 ** Click on the picture of the respective person to view GitHub-Profile.
 
+--- 
+
+## Setup
+
+To run the server-program on your local enviroment:
+``` sh
+# Clone repo
+git clone <Repository>
+cd <Repository-Folder>
+
+# Install requirements
+pip install -r requirements.txt
+
+# Build project and source ros-enviroment-variables
+cd ros
+catkin_make
+source ./devel/setup.bash
+
+# Launch
+roslaunch ./launch/styx.launch
+```
+
+Download the [simulator](https://github.com/udacity/CarND-Capstone/releases) (we have tested it using version 1.3) and run it. Ensure that port 4567 is free to used. 
 
 ---
 
