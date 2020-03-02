@@ -96,7 +96,7 @@ class WaypointUpdater(object):
         final_lane = self.generate_lane()
         # Publish the Lane ros-instance
         self.final_waypoints_pub.publish(final_lane)
-
+        
     def generate_lane(self):
         lane = Lane() # ROS Lane instance
 
@@ -112,6 +112,7 @@ class WaypointUpdater(object):
             lane.waypoints = self.decelerate_waypoints(base_waypoints, closest_idx)
 
         return lane
+
 
     def decelerate_waypoints(self, waypoints, closest_idx):
         # Create array to return new waypoints for deceleration
@@ -140,9 +141,10 @@ class WaypointUpdater(object):
             temp.append(p)
         return temp
 
+
     def traffic_cb(self, msg):
         self.stopline_wp_idx = msg.data
-        
+
     # Refresh current car-position information
     def pose_cb(self, msg):
         self.pose = msg
@@ -150,7 +152,7 @@ class WaypointUpdater(object):
     # Base-Waypoints are just published once. Ensure to store them in our variables
     def waypoints_cb(self, waypoints):
         # Store waypoints in local variable for class-instance
-        self.base_waypoints = waypoints
+        self.base_lane = waypoints
         # Create the KDTree which help us to find the waypoint-informations way more efficient
         # KDTree well explained can be found here: https://www.youtube.com/watch?v=TLxWtXEbtFE
         if not self.waypoints_2d:
