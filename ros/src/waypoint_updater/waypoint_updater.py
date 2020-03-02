@@ -112,6 +112,36 @@ class WaypointUpdater(object):
             lane.waypoints = self.decelerate_waypoints(base_waypoints, closest_idx)
 
         return lane
+
+    def decelerate_waypoints(self, waypoints, closest_idx):
+        # Create array to return new waypoints for deceleration
+        temp = []
+        # Iterate through all waypoints
+        for i, wp in enumerate(waypoints):
+            # Create a new waypoint instance to avoid overwriting the original ones
+            p = Waypoint() # ROS Waypoint instance
+            p.pose = wp.pose # Copy the position information of the original waypoint instance
+
+            # Get waypoint index to stop. The -2 is required, because otherwise the car would
+            # exactly stop staying on the middle of the stopline but it has to stop a few meters before
+            stop_idx = max(self.stopline_wp_idx - closest_idx - 2, 0)
+            # Get distance from the current-waypoint to the waypoint-to-stop to make a 
+            # smooth deceleration as we get closer to that point
+            dist = self.distance(waypoints, i, stop_idx)
+            # Calculate velocity for the current waypoint base on the maximum deceleration value and distance to that point
+            vel = math.sqrt(2 * MAX_DECEL * dist)
+            if vel < 1.:
+                vel = 0.
+
+            # Use the smaller value of the following two:
+            #    - maximum-speed due to speed-limit
+            #    - decelerating cause by detected red traffic light
+            p.twist.twist.linear.x = min(vel, wp.twist.twist.linear.x) 
+            temp.append(p)
+        return temp
+
+    def traffic_cb(self, msg):
+        self.stopline_wp_idx = msg.data
         
     # Refresh current car-position information
     def pose_cb(self, msg):
