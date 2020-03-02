@@ -96,6 +96,22 @@ class WaypointUpdater(object):
         final_lane = self.generate_lane()
         # Publish the Lane ros-instance
         self.final_waypoints_pub.publish(final_lane)
+
+    def generate_lane(self):
+        lane = Lane() # ROS Lane instance
+
+        # Get the range of waypoint of interest for the current planning
+        closest_idx = self.get_closest_waypoint_idx()
+        farthest_idx = closest_idx + LOOKAHEAD_WPS
+        base_waypoints = self.base_lane.waypoints[closest_idx:farthest_idx]
+
+        # If there is no stopsign or the given stopsign is out of the range of interest, just keep driving
+        if self.stopline_wp_idx == -1 or (self.stopline_wp_idx >= farthest_idx):
+            lane.waypoints = base_waypoints
+        else: # If the stopsign is relevant for us (in our planning range), calculate when the decelerate
+            lane.waypoints = self.decelerate_waypoints(base_waypoints, closest_idx)
+
+        return lane
         
     # Refresh current car-position information
     def pose_cb(self, msg):
