@@ -49,7 +49,7 @@ class WaypointUpdater(object):
 
         self.loop()
 
-     # Setup rospy-utils to keep the publishing at a specific frequency (in ours case 50x per seconds (20ms))
+    # Setup rospy-utils to keep the publishing at a specific frequency (in ours case 50x per seconds (20ms))
     def loop(self):
         rate = rospy.Rate(50)
         # Keep running until the node gets shutdown-signal
@@ -60,7 +60,7 @@ class WaypointUpdater(object):
                 self.publish_waypoints()
             # Use ros-sleep-function to reach the required frequency
             rate.sleep()
-            
+
     # Use hyperplane and current-car-position to get the closest waypoint to drive to
     def get_closest_waypoint_idx(self):
         # Get current car position on x-y-axis
@@ -91,13 +91,12 @@ class WaypointUpdater(object):
         return closest_idx
 
     # Send the waypoints to the subscribed notes
-    def publish_waypoints(self, closest_idx):
-        lane = Lane() # ROS Lane instance
-        lane.header = self.base_waypoints.header # Reuse current header-information from basic waypoints
-        # Add closest waypoint which is infront of us +LOOKAHEAD_WPS waypoint beyond 
-        lane.waypoints = self.base_waypoints.waypoints[closest_idx:closest_idx + LOOKAHEAD_WPS] 
-        self.final_waypoints_pub.publish(lane)
-
+    def publish_waypoints(self):
+        # Get Lane ros-instance from generate_lane-function
+        final_lane = self.generate_lane()
+        # Publish the Lane ros-instance
+        self.final_waypoints_pub.publish(final_lane)
+        
     # Refresh current car-position information
     def pose_cb(self, msg):
         self.pose = msg
