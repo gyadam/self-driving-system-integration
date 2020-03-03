@@ -25,8 +25,8 @@ class Controller(object):
         sample_time = .02  # sample time
 
         ## Controller
-        self.yaw_contr = YawController(wheel_base, steer_ratio, 0.1, max_lat_acc, max_steer_angle)
-        self.throttle_contr = PID(kp, ki, kd, min_throttle, max_throttle)
+        self.yaw_controller = YawController(wheel_base, steer_ratio, 0.1, max_lat_acc, max_steer_angle)
+        self.throttle_controller = PID(kp, ki, kd, min_throttle, max_throttle)
         self.velocity_filter = LowPassFilter(tau, sample_time)
 
         ## Other needed parameters
@@ -46,7 +46,7 @@ class Controller(object):
         ## Reset PID controller, if the DBW is disabled
         # This prevents an accumelation of the error, when e.g. standing at a traffic light
         if not enabled:
-            self.throttle_contr.reset()
+            self.throttle_controller.reset()
             return 0., 0., 0.
 
         ## Perform lowpass filter on current velocity
@@ -66,7 +66,7 @@ class Controller(object):
         self.last_time = current_time
 
         # Perform next step in PID controller
-        throttle = self.throttle_contr.step(delta_v, delta_t)
+        throttle = self.throttle_controller.step(delta_v, delta_t)
         brake = 0
 
         ## Brake value calculation
