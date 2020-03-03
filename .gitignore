@@ -5,3 +5,4 @@ build/
 devel/
 ros/src/styx/__pycache__/
 ros/src/CMakeLists.txt
+.DS_Store
