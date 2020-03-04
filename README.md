@@ -101,7 +101,32 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dictum sapien vel 
 
 ![](imgs/ROS_DBW_Node.png)
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dictum sapien vel rutrum ultricies. Mauris eu elementum est. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nunc et tortor id eros efficitur suscipit. Sed vitae sem eros. Sed nec ligula euismod, bibendum odio eu, pretium.
+The DBW Node (Drive-By-Wire) is responsible for sending throttle, steering and brake commands to the car. Drive by wire is the use of electrical or electro-mechanical systems for performing vehicle functions traditionally achieved by mechanical systems, e.g. hitting the brake pedal. 
+
+In this implementation the DBW Node subscribes to the `current_velocity` ROS topic (current velocity of the car), to the `twist_cmd` ROS topic (velocity commands from the Waypoint Follower Node) and to the `dbw_enabled` ROS topic (information about the DBW system status). The DBW Node publishes onto the `throttle_cmd`, `steering_cmd` and the `brake_cmd` ROS topics. 
+
+The implementation is splitted up into two files: `ros/src/twist_controller/dbw_node.py` and `ros/src/twist_controller/twist_controller.py`. Inside the `dbw_node.py` file is the whole ROS logic implemented (Subscribers, Publisher) and also the loop, which runs at 50Hz the controller. It only publishes onto the topics, if drive by wire is enabled. There are cases, where drive by wire is disabled, e.g. when the car stands at a red traffic light. 
+
+The controller is inside the `twist_controller.py` file. It uses a Lowpass Filter, a PID controller and a Yaw controller (`yaw_controller.py`) to achieve the throttle and steering commands. To reduce oscillation from the velocity command (from the `twist_cmd` topic) the Lowpass filter is used. Since the integrational error of the PID controller would increase, when the vehicle does not move, the PID controller has to be reseted every time the DBW is disabled.
+The brake command is calculated seperatly as torque value:
+
+```python
+## Brake value calculation
+# Since the car has an automatic transmission, a brake value is needed to keep the car in position
+if linear_vel == 0. and current_vel < 0.1:
+  throttle = 0
+  brake = 700 #N*m - Torque
+# If we want to decrease velocity, brake is used
+elif throttle < .1 and delta_v < 0:
+  throttle = 0
+  decel = max(delta_v, self.decel_limit)
+  brake = abs(decel)*self.vehicle_m*self.wheel_r #N*m - Torque
+```
+
+The torque for the brake motor is calculated by `deceleration * vehicle_mass * wheel_radius`.
+
+The DBW Node was implemented by Lukas Leonard Köning.
+
 
 ---
 
