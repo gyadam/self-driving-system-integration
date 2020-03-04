@@ -17,6 +17,40 @@ The project was proudly developed by the following contributors (in alphabetical
 
 ** Click on the picture of the respective person to view GitHub-Profile.
 
+---
+
+## Setup
+
+We recommend to use the Docker container provided by Udacity. To do so first build the docker container and then run the docker file:
+
+```sh
+# Build
+docker build . -t capstone
+
+# Run
+docker run -p 4567:4567 -v $PWD:/capstone -v /tmp/log:/root/.ros/ --rm -it capstone
+```
+
+To run the server-program on your local enviroment:
+
+``` sh
+# Clone this repository
+git clone <Repository>
+cd <Repository-Folder>
+
+# Install requirements
+pip install -r requirements.txt
+
+# Build project and source ros-enviroment-variables
+cd ros
+catkin_make
+source ./devel/setup.bash
+
+# Launch
+roslaunch ./launch/styx.launch
+```
+
+To see the result you need to download the [simulator](https://github.com/udacity/CarND-Capstone/releases) (we have tested it using version 1.3) and run it. Ensure that port 4567 is free to used.
 
 ---
 
