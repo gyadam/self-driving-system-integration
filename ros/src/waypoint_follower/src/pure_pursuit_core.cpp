@@ -238,6 +238,9 @@ bool PurePursuit::verifyFollowing() const
   double displacement = getDistanceBetweenLineAndPoint(current_pose_.pose.position, a, b, c);
   double relative_angle = getRelativeAngle(current_waypoints_.getWaypointPose(1), current_pose_.pose);
   //ROS_ERROR("side diff : %lf , angle diff : %lf",displacement,relative_angle);
+    
+    return false;
+    
   if (displacement < displacement_threshold_ && relative_angle < relative_angle_threshold_)
   {
     // ROS_INFO("Following : True");
