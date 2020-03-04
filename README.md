@@ -61,7 +61,7 @@ The following references/links/papers gave us inspiration and helped us to solve
 - [Short description 2](https://udacity.com)
 - [Short description 3](https://udacity.com)
 
-More about Nanodegree-Program at Udacity can be found here:
+More about the Self-Driving Car Engineer Nanodegree Program at Udacity can be found here:
 [Become a Self-Driving Car Engineer](https://www.udacity.com/course/self-driving-car-engineer-nanodegree--nd013)
 
 ---
@@ -79,7 +79,11 @@ In this documentation the structure and the way how we achieved the goal (contro
 
 ### 1.) ROS System Architecture
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dictum sapien vel rutrum ultricies. Mauris eu elementum est. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nunc et tortor id eros efficitur suscipit. Sed vitae sem eros. Sed nec ligula euismod, bibendum odio eu, pretium.
+![](imgs/ROS_architecture.png)
+
+The image above shows the system architecture of our implementation. There are three main subsystems in an autonomous vehicle architecture: Perception, Planning, Control. The perception subsystem processes sensor information (like camera images, LiDAR point clouds or IMU data) to information that can be used by the planning subsystem. The planning subsystem takes in this information and decides what the car should do. It creates trajectorys for the control subsystem. The control subsystem takes in this information, uses different controllers to create throttle, break and steering commands and sends them to the components of the car. 
+
+Our task was to implement the Traffic Light Detection Node, the Waypoint Updater Node and the DBW Node. These are explained in the next sections in more detail.
 
 ### 2.) Traffic Light Detection
 
