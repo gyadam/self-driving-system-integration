@@ -125,6 +125,14 @@ elif throttle < .1 and delta_v < 0:
 
 The torque for the brake motor is calculated by `deceleration * vehicle_mass * wheel_radius`.
 
+**The "overshooting" problem**
+
+During testing we encountered an "overshooting" problem in the steering (s. image left). This was caused by the Waypoint Follower node which only sends new angular velocity commands, if the vehicle drifts of the trajectory further then a specific threshold. We fixed this issue by removing the threshold and computing the angular velocity at every rate.
+
+| "Overshooting" issue       | Fixed "Overshooting"             |
+| -------------------------- | -------------------------------- |
+| ![](imgs/overshooting.gif) | ![](imgs/overshooting_fixed.gif) |
+
 The DBW Node was implemented by Lukas Leonard Köning.
 
 ---
