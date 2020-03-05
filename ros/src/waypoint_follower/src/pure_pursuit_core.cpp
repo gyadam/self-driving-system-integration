@@ -267,7 +267,9 @@ geometry_msgs::Twist PurePursuit::calcTwist(double curvature, double cmd_velocit
   else
   {
     twist.angular.z = prev_angular_velocity;
-  }*/
+  }
+  prev_angular_velocity = twist.angular.z;
+   */
     
   // Removed the verification and calculate new angular velocity every rate
     
