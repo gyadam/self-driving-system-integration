@@ -11,9 +11,12 @@ The project uses the [Roboter-Operating-System](https://en.wikipedia.org/wiki/Ro
 ## Team
 The project was proudly developed by the following contributors (in alphabetical order).
 
-| Adam Gyarmati | Gaurav Asati | Kevin Hubert | Lukas Leonard Köning |
-|:---:|:---:|:---:|:---:|
-| [![Adam_GitHubImage](https://avatars1.githubusercontent.com/u/40522904?v=4&s=400)](https://github.com/gyadam)    | [![Gaurav_GitHubImage](https://avatars0.githubusercontent.com/u/33591870?s=400&v=4)](https://github.com/gasatig) | [![Kevin_GitHubImage](https://avatars3.githubusercontent.com/u/34512569?s=400&v=4)](https://github.com/KevinHubert-Dev)  | [![LukasLeonard_GitHubImage](https://avatars2.githubusercontent.com/u/6058766?s=400&v=4)](https://github.com/LukasLeonardKoening)  |
+| *Name*: | Adam Gyarmati | Gaurav Asati | Kevin Hubert | Lukas Leonard Köning |
+|:---:|:---:|:---:|:---:|:---:|
+|*ROS expercience*|Done ROS tutorials|Done ROS tutorials|Done ROS tutorials|Done ROS tutorials|
+|*Team role*|Developer|Developer|Developer & Teamlead|Developer|
+|*Time zone*|GMT-8|GMT+5|GMT+1|GMT+1|
+|*GitHub profile image*| [![Adam_GitHubImage](https://avatars1.githubusercontent.com/u/40522904?v=4&s=400)](https://github.com/gyadam)    | [![Gaurav_GitHubImage](https://avatars0.githubusercontent.com/u/33591870?s=400&v=4)](https://github.com/gasatig) | [![Kevin_GitHubImage](https://avatars3.githubusercontent.com/u/34512569?s=400&v=4)](https://github.com/KevinHubert-Dev)  | [![LukasLeonard_GitHubImage](https://avatars2.githubusercontent.com/u/6058766?s=400&v=4)](https://github.com/LukasLeonardKoening)  |
 
 ** Click on the picture of the respective person to view their GitHub profile.
 
@@ -24,6 +27,7 @@ The project was proudly developed by the following contributors (in alphabetical
 We recommend to use the Docker container provided by Udacity. To do so first build the docker container and then run the docker file:
 
 ```sh
+# Ensure you are in the directory including the provided Dockerfile
 # Build
 docker build . -t capstone
 
@@ -98,7 +102,9 @@ Therefore the waypoint-updater uses the currently driven waypoint and uses splin
 The waypoint-updater is implemented in the following files:
 [./ros/src/waypoint_updater/waypoint_updater.py](https://github.com/gyadam/self-driving-system-integration/blob/master/ros/src/waypoint_updater/waypoint_updater.py)
 * The development was excluded into the separated feature-branches. Moreover we decided to have two developer for each feature, one for implementing and the other one for quality accurance by doing a code review.
-|Branch|Implemented by|Code-reviewer|
+
+
+| Branch | Implemented by | Code-reviewer |
 |:---:|:---:|:---:|
 |[waypoint_updater_partial](https://github.com/gyadam/self-driving-system-integration/tree/waypoint_updater_partial)|Adam Gyarmati|Kevin Hubert|
 |[waypoints_updater_full](https://github.com/gyadam/self-driving-system-integration/tree/waypoints_updater_full)|Kevin Hubert|Adam Gyarmati|
@@ -106,7 +112,53 @@ The waypoint-updater is implemented in the following files:
 The waypoint-updater subscribes to 4 ros-topics makes an aggregation of the given data and publishes to a single topic (see visualization below) which represetens the final-waypoints to drive for. 
 ![visualization of waypoint_updater-node](imgs/ROS_WPU_Node.png)
 
+| Subscribed or Published | Node-Name | Explaination |
+|:----:|:----:|:----|
+|Subscribe|base_waypoints|This topic is only publishedo once when the simulator starts and returns a list of waypoints (e.g.: GPS-waypoints) which represents waypoints to drive for|
+|Subscribe|current_pose|This nodes is used to get information about the current position of the car (x-y-coordinates and heading-direction|
+|Subscribe|traffic_waypoint|Get information about upcoming traffic lights and state of the traffic-light to plan deceleration|
+|Publish|final_waypoints|The final waypoints contains, as the name says, the waypoint which should be driven and even informations about the speed based on the maximum allowed speed for the given waypoint and even a deceleration for upcoming traffic-lights (especially when they are red)|
 
+Below you can find some code snippets used for the waypoint_updater. All snippets are part of the "waypoint_updater.py"-file
+
+Plan next waypoints based on the planning-distance, maximum velocity and required acceleration due to traffic-lights
+```python
+# Get the range of waypoint of interest for the current planning
+closest_idx = self.get_closest_waypoint_idx()
+farthest_idx = closest_idx + LOOKAHEAD_WPS
+base_waypoints = self.base_lane.waypoints[closest_idx:farthest_idx]
+
+# If there is no stopsign or the given stopsign is out of the range of interest, just keep driving
+if self.stopline_wp_idx == -1 or (self.stopline_wp_idx >= farthest_idx):
+  lane.waypoints = base_waypoints
+else: # If the stopsign is relevant for us (in our planning range), calculate when the decelerate
+  lane.waypoints = self.decelerate_waypoints(base_waypoints, closest_idx)
+```
+
+Iterate through waypoints to apply deceleration-curve for a smooth stop infront of a traffic-light
+> Note: For minimization of the code the comments were shorted/changed in the following snippet
+```py
+for i, wp in enumerate(waypoints):
+  p = Waypoint() # ROS Waypoint instance
+  p.pose = wp.pose # Copy original waypoint position
+
+  # Get position where to stop. -2 is required cause by car-length
+  stop_idx = max(self.stopline_wp_idx - closest_idx - 2, 0)
+  # Use distance as coefficient for deceleration-curve
+  dist = self.distance(waypoints, i, stop_idx)
+
+  # Calculate velocity for specific waypoit
+  vel = math.sqrt(2 * MAX_DECEL * dist)
+  if vel < 1.:
+    vel = 0.
+
+  # Use the smaller value of the following two:
+  #   - maximum-speed due to speed-limit
+  #   - decelerating cause by detected red traffic light
+  p.twist.twist.linear.x = min(vel, wp.twist.twist.linear.x) 
+  temp.append(p)
+  return temp
+```
 
 The waypoint-updater was implemented by Adam Gyarmati and Kevin Hubert.
 
