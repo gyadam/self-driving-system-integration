@@ -78,7 +78,7 @@ class DBWTestNode(object):
         self.dbw_enabled = msg.data
 
     def steer_cb(self, msg):
-        self.steer = msg.steering_wheel_angle_cmd
+        self.steer = msg.steering_wheel_cmd
 
     def throttle_cb(self, msg):
         self.throttle = msg.pedal_cmd
@@ -88,7 +88,7 @@ class DBWTestNode(object):
 
     def actual_steer_cb(self, msg):
         if self.dbw_enabled and self.steer is not None:
-            self.steer_data.append({'actual': msg.steering_wheel_angle_cmd,
+            self.steer_data.append({'actual': msg.steering_wheel_cmd,
                                     'proposed': self.steer})
             self.steer = None
 

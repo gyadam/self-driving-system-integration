@@ -101,7 +101,7 @@ class Bridge(object):
 
     def create_steer(self, val):
         st = SteeringReport()
-        st.steering_wheel_angle_cmd = val * math.pi/180.
+        st.steering_wheel_cmd = val * math.pi/180.
         st.enabled = True
         st.speed = self.vel
         return st
@@ -187,7 +187,7 @@ class Bridge(object):
             self.img_count = 0
 
     def callback_steering(self, data):
-        self.server('steer', data={'steering_angle': str(data.steering_wheel_angle_cmd)})
+        self.server('steer', data={'steering_angle': str(data.steering_wheel_cmd)})
 
     def callback_throttle(self, data):
         self.server('throttle', data={'throttle': str(data.pedal_cmd)})
