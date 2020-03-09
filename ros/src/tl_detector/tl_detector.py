@@ -44,7 +44,6 @@ class TLDetector(object):
         config_string = rospy.get_param("/traffic_light_config")
         self.config = yaml.load(config_string)
 
-        print("init Detector")
         self.upcoming_red_light_pub = rospy.Publisher('/traffic_waypoint', Int32, queue_size=1)
 
         self.bridge = CvBridge()
@@ -69,10 +68,8 @@ class TLDetector(object):
         if not self.waypoints_2d:
             self.waypoints_2d = [[waypoint.pose.pose.position.x, waypoint.pose.pose.position.y] for waypoint in waypoints.waypoints]
             self.waypoint_tree = KDTree(self.waypoints_2d)
-        print("created KDTree")
 
     def traffic_cb(self, msg):
-        print("traffic callback called")
         self.lights = msg.lights
 
     def image_cb(self, msg):
@@ -83,7 +80,6 @@ class TLDetector(object):
             msg (Image): image from car-mounted camera
 
         """
-        print("image callback called")
         self.has_image = True
         self.camera_image = msg
         light_wp, state = self.process_traffic_lights()
@@ -156,7 +152,6 @@ class TLDetector(object):
         #file_suffix = now.isoformat()
         #img_name = 'data-'+file_suffix+'.jpg'
         #cv2.imwrite(img_name, cv_image)
-        print("processing traffic lights")
 
         closest_light = None
         line_wp_idx = None
@@ -165,7 +160,6 @@ class TLDetector(object):
         # List of positions that correspond to the line to stop in front of for a given intersection
         stop_line_positions = self.config['stop_line_positions']
         if(self.pose and self.waypoint_tree):
-            print("pose, waypoint received")
             #car_position = self.get_closest_waypoint(self.pose.pose)
             car_wp_idx = self.get_closest_waypoint(self.pose.pose.position.x,self.pose.pose.position.y)
             diff = len(self.waypoints.waypoints)
@@ -177,7 +171,6 @@ class TLDetector(object):
                     diff = d
                     closest_light = light
                     line_wp_idx = temp_wp_idx
-                    print(d, line_wp_idx)
                     
         #TODO find the closest visible traffic light (if one exists)
 
