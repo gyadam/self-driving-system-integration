@@ -1,11 +1,11 @@
-# Self driving Car - Nanodegree Final
+# Self-Driving Car Engineer - Final Project
 
-Capstone Project of Udacity's Self-Driving Car Engineer Nanodegree Program
+Final (Capstone) Project of Udacity's Self-Driving Car Engineer Nanodegree Program
 
 ## Introducing
 
-The goal of the project is to capsulate the whole gained knowledge of the "Self driving car"-Nanodegree course and use it to control a real-driving-car on a test-track in California.
-The project uses the [Roboter-Operating-System](https://en.wikipedia.org/wiki/Robot_Operating_System) (short: ROS) which is a framework mostly used in the fields of robotics and autonomous systems.
+The goal of the project is to capsulate the whole gained knowledge of the "Self-Driving Car Engineer"-Nanodegree course from Udaciyt and use it to control a real-driving-car on a test-track in California.
+The project includes the usage of the [Roboter-Operating-System](https://en.wikipedia.org/wiki/Robot_Operating_System) (short: ROS) which is a framework mostly used in the fields of robotics and autonomous systems.
 
 
 ## Team
@@ -13,21 +13,20 @@ The project was proudly developed by the following contributors (in alphabetical
 
 | *Name*: | Adam Gyarmati | Gaurav Asati | Kevin Hubert | Lukas Leonard Köning |
 |:---:|:---:|:---:|:---:|:---:|
-|*ROS expercience*|Done ROS tutorials|Done ROS tutorials|Done ROS tutorials|Done ROS tutorials|
-|*Team role*|Developer|Developer|Developer & Teamlead|Developer|
-|*Time zone*|GMT-8|GMT+5|GMT+1|GMT+1|
-|*GitHub profile image*| [![Adam_GitHubImage](https://avatars1.githubusercontent.com/u/40522904?v=4&s=400)](https://github.com/gyadam)    | [![Gaurav_GitHubImage](https://avatars0.githubusercontent.com/u/33591870?s=400&v=4)](https://github.com/gasatig) | [![Kevin_GitHubImage](https://avatars3.githubusercontent.com/u/34512569?s=400&v=4)](https://github.com/KevinHubert-Dev)  | [![LukasLeonard_GitHubImage](https://avatars2.githubusercontent.com/u/6058766?s=400&v=4)](https://github.com/LukasLeonardKoening)  |
+|      *Team role*       |                          Developer                           |                          Developer                           |                     Developer & Teamlead                     |                          Developer                           |
+|      *Time zone*       |                  GMT-8<br />(San Francisco)                  |                            GMT+5                             |                     GMT+1<br />(Berlin)                      |                     GMT+1<br />(Munich)                      |
+| *GitHub profile image* | [![Adam_GitHubImage](https://avatars1.githubusercontent.com/u/40522904?v=4&s=400)](https://github.com/gyadam) | [![Gaurav_GitHubImage](https://avatars0.githubusercontent.com/u/33591870?s=400&v=4)](https://github.com/gasatig) | [![Kevin_GitHubImage](https://avatars3.githubusercontent.com/u/34512569?s=400&v=4)](https://github.com/KevinHubert-Dev) | [![LukasLeonard_GitHubImage](https://avatars2.githubusercontent.com/u/6058766?s=400&v=4)](https://github.com/LukasLeonardKoening) |
 
-** Click on the picture of the respective person to view their GitHub profile.
+** *Click on the picture of the respective person to view their GitHub profile.*
 
 ---
 
 ## Setup
 
-We recommend to use the Docker container provided by Udacity. To do so first build the docker container and then run the docker file:
+We recommend to use the Docker container provided by Udacity. To do so, first build the docker container and then run the docker file:
 
 ```sh
-# Ensure you are in the directory including the provided Dockerfile
+# Ensure that you are in the directory including the provided Dockerfile
 # Build
 docker build . -t capstone
 
@@ -66,6 +65,10 @@ The following references/links/papers gave us inspiration and helped us to solve
 - [Short description 2](https://udacity.com)
 - [Short description 3](https://udacity.com)
 
+We used data for the Traffic Light Detection from following sources:
+
+- Alex Lechner's [GitHub repository](https://github.com/alex-lechner/Traffic-Light-Classification) ("The Lazy Approach")
+
 More about the Self-Driving Car Engineer Nanodegree Program at Udacity can be found here:
 [Become a Self-Driving Car Engineer](https://www.udacity.com/course/self-driving-car-engineer-nanodegree--nd013)
 
@@ -73,7 +76,7 @@ More about the Self-Driving Car Engineer Nanodegree Program at Udacity can be fo
 
 ## Documentation
 
-In this documentation the structure and the way how we achieved the goal (control the car) is briefly explained.
+In this documentation the structure and the way how we achieved the goal (control the car) is briefly explained. The README and documentation was written by all members (especially for their own part of the project) and reviewed by Lukas Leonard Köning.
 
 ### Table of Contents
 
@@ -94,35 +97,56 @@ Our task was to implement the Traffic Light Detection Node, the Waypoint Updater
 
 ![](imgs/ROS_TLD_Node.png)
 
+### TODO @gaurav: Please add here an explenation of the Traffic Light Node (Replace Lorem ipsum placeholder). 
+
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dictum sapien vel rutrum ultricies. Mauris eu elementum est. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nunc et tortor id eros efficitur suscipit. Sed vitae sem eros. Sed nec ligula euismod, bibendum odio eu, pretium.
+
+**Data collection**
+
+Images from the simulator world are different from real world data. One of the main differences are the traffic lights. On the test track the traffic lights are inside a yellow casings while they are in a black casing in the simulator. 
+
+For the real world data we had to extract images from shared ROS bag files. To gather images from the simulator we had to use the "Manual" option. Once we would have completed this, we had to label (classify) the images of traffic lights by Red (STOP) / Green(GO) / Yellow (Decide...). There are various tools available for this. Once labeling is completed we would have a XML-file with the coordinates and the class of all traffic lights per image. The XML-file needs to be converted to TensorFlow records that can be used to train object detection models.
+
+In this project we have skipped the explained data collection by re-using already available data (s. references section above).
+
+**Object Detection Model**
+
+### TODO @gaurav: Please add here an explenation of the model you used (architecture, training, ...)(Replace Lorem ipsum placeholder).
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dictum sapien vel rutrum ultricies. Mauris eu elementum est. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nunc et tortor id eros efficitur suscipit. Sed vitae sem eros. Sed nec ligula euismod, bibendum odio eu, pretium.
+
+
+
+The Traffic Light Detection was implemented by Gaurav Asati.
 
 ### 3.) Waypoint Updater
 
-The waypoint-upter is responsible for planning the path to drive from one wapoint to the next and so on.
-Therefore the waypoint-updater uses the currently driven waypoint and uses splines or polynonminal-curve n-degree to fit the curvature between the given waypoints best.
-The waypoint-updater is implemented in the following files:
-[./ros/src/waypoint_updater/waypoint_updater.py](https://github.com/gyadam/self-driving-system-integration/blob/master/ros/src/waypoint_updater/waypoint_updater.py)
-* The development was excluded into the separated feature-branches. Moreover we decided to have two developer for each feature, one for implementing and the other one for quality accurance by doing a code review.
+The Waypoint Updater is responsible for planning the path to drive from the current to the next waypoint. Therefore the Waypoint Updater uses the waypoint, where the vehicle recently drove by and uses splines or n-degree polynomial curves to fit the curvature between the given waypoints.
+
+The implementation of the Waypoint Updater can be found in the [./ros/src/waypoint_updater/waypoint_updater.py](https://github.com/gyadam/self-driving-system-integration/blob/master/ros/src/waypoint_updater/waypoint_updater.py) file. 
+
+The development was split up into two separate feature branches. Moreover we decided to have a developer responsible for implementation and one for quality assurance by doing a code review.
 
 
-| Branch | Implemented by | Code-reviewer |
+| Branch | Implementation | Code Review |
 |:---:|:---:|:---:|
 |[waypoint_updater_partial](https://github.com/gyadam/self-driving-system-integration/tree/waypoint_updater_partial)|Adam Gyarmati|Kevin Hubert|
 |[waypoints_updater_full](https://github.com/gyadam/self-driving-system-integration/tree/waypoints_updater_full)|Kevin Hubert|Adam Gyarmati|
 
-The waypoint-updater subscribes to 4 ros-topics makes an aggregation of the given data and publishes to a single topic (see visualization below) which represetens the final-waypoints to drive for. 
+The Waypoint Updater subscribes to four ROS topics, processes the given data and publishes to a single topic (see visualization below) which represents the final waypoints to drive along. 
 ![visualization of waypoint_updater-node](imgs/ROS_WPU_Node.png)
 
-| Subscribed or Published | Node-Name | Explaination |
+| Action | ROS topic | Explaination |
 |:----:|:----:|:----|
-|Subscribe|base_waypoints|This topic is only publishedo once when the simulator starts and returns a list of waypoints (e.g.: GPS-waypoints) which represents waypoints to drive for|
-|Subscribe|current_pose|This nodes is used to get information about the current position of the car (x-y-coordinates and heading-direction|
-|Subscribe|traffic_waypoint|Get information about upcoming traffic lights and state of the traffic-light to plan deceleration|
-|Publish|final_waypoints|The final waypoints contains, as the name says, the waypoint which should be driven and even informations about the speed based on the maximum allowed speed for the given waypoint and even a deceleration for upcoming traffic-lights (especially when they are red)|
+|Subscribe|base_waypoints|This topic is only published once when the simulator starts. It returns a list of waypoints (e.g.: GPS-waypoints) which represents waypoints to drive along.|
+|Subscribe|current_pose|This nodes is used to get information about the current position of the car (x-y-coordinates and heading-direction).|
+|Subscribe|traffic_waypoint|Get information about upcoming traffic lights and state of the traffic-light to plan behavior (e.g. deceleration).|
+|Publish|final_waypoints|The final waypoints contains the waypoints that the car should follow, informations about the speed based on the maximum allowed speed for the given waypoints and deceleration information for upcoming traffic-lights (especially when they are red).|
 
-Below you can find some code snippets used for the waypoint_updater. All snippets are part of the "waypoint_updater.py"-file
+Below you can find some code snippets used for the waypoint_updater. All snippets are part of the `waypoint_updater.py` file.
 
-Plan next waypoints based on the planning-distance, maximum velocity and required acceleration due to traffic-lights
+- Plan next waypoints based on the planning-distance, maximum velocity and required acceleration due to traffic-lights:
+
 ```python
 # Get the range of waypoint of interest for the current planning
 closest_idx = self.get_closest_waypoint_idx()
@@ -136,9 +160,10 @@ else: # If the stopsign is relevant for us (in our planning range), calculate wh
   lane.waypoints = self.decelerate_waypoints(base_waypoints, closest_idx)
 ```
 
-Iterate through waypoints to apply deceleration-curve for a smooth stop infront of a traffic-light
+- Iterate through waypoints to apply deceleration-curve for a smooth stop infront of a traffic-light:
+
 > Note: For minimization of the code the comments were shorted/changed in the following snippet
-```py
+```python
 for i, wp in enumerate(waypoints):
   p = Waypoint() # ROS Waypoint instance
   p.pose = wp.pose # Copy original waypoint position
@@ -161,7 +186,7 @@ for i, wp in enumerate(waypoints):
   return temp
 ```
 
-The waypoint-updater was implemented by Adam Gyarmati and Kevin Hubert.
+The Waypoint Updater was implemented by Adam Gyarmati and Kevin Hubert.
 
 ### 4.) Drive-By-Wire
 
@@ -199,27 +224,7 @@ During testing we encountered an "overshooting" problem in the steering (s. imag
 | -------------------------- | -------------------------------- |
 | ![](imgs/overshooting.gif) | ![](imgs/overshooting_fixed.gif) |
 
-The DBW Node was implemented by Lukas Leonard Köning.
-
----
-
-# Traffic light detection and classification.
-
-Images in simulator world are quite different from real world. One of main differences is traffic lights. In real world traffic lights are inside Yellow casings while in simulator in they are in Black casings. For real world data we need to extract images from shared ROS bag files while for simulator we need to capture images using "Manual" option in simulator. Use below steps to capture images from shared ROS bag files
-
-1: Initiate "roscore" from one terminal.
-2: Open another terminal and initiate "rosbag play -l path/to/your_rosbag_file.bag"
-3: Open one more terminal and create a new folder where you want to have captured images.
-4: Go to newly created folder and initiate "rosrun image_view image_saver _sec_per_frame:=0.01 image:=/image_raw" to capture ROS bag images.
-
-Do note that ROS file will play in loop, so we need to stop once it had completed one  iteration.
-
-Once this is done the real laborious task of labeling images to comes. In this we have to mark and classify traffic light images into Red(No GO)/Green(GO)/Yellow (take a call for go/ho go). There are various tools available for this. One the most common tool used in this is labelImg (add link). On labellings of images it generates a xml file which has class, left minimum and right maximum for each traffic light in given images.
-
-After we have required xml files, we need to create TF records for these so that we fine tune object detection models using it. There are many open source scripts for that.
-
-In this project we have have skipped the manual laborious work by re-using labeled data from other students. We used data from public github  repo [link](https://github.com/alex-lechner/Traffic-Light-Classification). Required data can be downloaded from shared [link](https://www.dropbox.com/s/vaniv8eqna89r20/alex-lechner-udacity-traffic-light-dataset.zip?dl=0).
-
+The DBW Node was implemented by Lukas Leonard Köning and was reviewed by Adam Gyarmati.
 
 ---
 ## Result
