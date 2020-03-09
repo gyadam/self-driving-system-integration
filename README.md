@@ -203,6 +203,25 @@ The DBW Node was implemented by Lukas Leonard Köning.
 
 ---
 
+# Traffic light detection and classification.
+
+Images in simulator world are quite different from real world. One of main differences is traffic lights. In real world traffic lights are inside Yellow casings while in simulator in they are in Black casings. For real world data we need to extract images from shared ROS bag files while for simulator we need to capture images using "Manual" option in simulator. Use below steps to capture images from shared ROS bag files
+
+1: Initiate "roscore" from one terminal.
+2: Open another terminal and initiate "rosbag play -l path/to/your_rosbag_file.bag"
+3: Open one more terminal and create a new folder where you want to have captured images.
+4: Go to newly created folder and initiate "rosrun image_view image_saver _sec_per_frame:=0.01 image:=/image_raw" to capture ROS bag images.
+
+Do note that ROS file will play in loop, so we need to stop once it had completed one  iteration.
+
+Once this is done the real laborious task of labeling images to comes. In this we have to mark and classify traffic light images into Red(No GO)/Green(GO)/Yellow (take a call for go/ho go). There are various tools available for this. One the most common tool used in this is labelImg (add link). On labellings of images it generates a xml file which has class, left minimum and right maximum for each traffic light in given images.
+
+After we have required xml files, we need to create TF records for these so that we fine tune object detection models using it. There are many open source scripts for that.
+
+In this project we have have skipped the manual laborious work by re-using labeled data from other students. We used data from public github  repo [link](https://github.com/alex-lechner/Traffic-Light-Classification). Required data can be downloaded from shared [link](https://www.dropbox.com/s/vaniv8eqna89r20/alex-lechner-udacity-traffic-light-dataset.zip?dl=0).
+
+
+---
 ## Result
 
 **Impressiv result images and video here...**
