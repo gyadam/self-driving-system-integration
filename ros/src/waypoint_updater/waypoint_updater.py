@@ -4,6 +4,7 @@ import numpy as np
 import rospy
 from geometry_msgs.msg import PoseStamped
 from styx_msgs.msg import Lane, Waypoint
+from std_msgs.msg import Int32
 from scipy.spatial import KDTree
 
 import math
@@ -24,7 +25,7 @@ TODO (for Yousuf and Aaron): Stopline location for each traffic light.
 '''
 
 LOOKAHEAD_WPS = 200 # Number of waypoints we will publish. You can change this number
-
+MAX_DECEL = .5 # Maximum deceleration to keep up a nice drive-behaviour
 
 class WaypointUpdater(object):
     def __init__(self):
@@ -33,16 +34,16 @@ class WaypointUpdater(object):
         # Subscribe to ROS-topics to get current-position and waypoint information
         rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb)
         rospy.Subscriber('/base_waypoints', Lane, self.waypoints_cb)
-
-        # TODO: Add a subscriber for /traffic_waypoint and /obstacle_waypoint below
+        rospy.Subscriber('/traffic_waypoint', Int32, self.traffic_cb)
 
         # Create ROS-topic-publisher to pass the final_waypoints to drive to other nodes.
         # queue_size=1 to ensure non old informations is used by subscribers.
         self.final_waypoints_pub = rospy.Publisher('final_waypoints', Lane, queue_size=1)
 
         # TODO: Add other member variables you need below
+        self.base_lane = None
         self.pose = None
-        self.base_waypoints = None
+        self.stopline_wp_idx = -1
         self.waypoints_2d = None
         self.waypoint_tree = None
 
@@ -54,10 +55,9 @@ class WaypointUpdater(object):
         # Keep running until the node gets shutdown-signal
         while not rospy.is_shutdown():
             # Avoid race-conditions when base_waypoints or current position was not intialized
-            if self.pose and self.base_waypoints:
-                # Get closest waypoint to drive to
-                closest_waypoint_idx = self.get_closest_waypoint_idx()
-                self.publish_waypoints(closest_waypoint_idx)
+            if self.pose and self.base_lane:
+                # Get waypoints to drive
+                self.publish_waypoints()
             # Use ros-sleep-function to reach the required frequency
             rate.sleep()
 
@@ -91,12 +91,59 @@ class WaypointUpdater(object):
         return closest_idx
 
     # Send the waypoints to the subscribed notes
-    def publish_waypoints(self, closest_idx):
+    def publish_waypoints(self):
+        # Get Lane ros-instance from generate_lane-function
+        final_lane = self.generate_lane()
+        # Publish the Lane ros-instance
+        self.final_waypoints_pub.publish(final_lane)
+        
+    def generate_lane(self):
         lane = Lane() # ROS Lane instance
-        lane.header = self.base_waypoints.header # Reuse current header-information from basic waypoints
-        # Add closest waypoint which is infront of us +LOOKAHEAD_WPS waypoint beyond 
-        lane.waypoints = self.base_waypoints.waypoints[closest_idx:closest_idx + LOOKAHEAD_WPS] 
-        self.final_waypoints_pub.publish(lane)
+
+        # Get the range of waypoint of interest for the current planning
+        closest_idx = self.get_closest_waypoint_idx()
+        farthest_idx = closest_idx + LOOKAHEAD_WPS
+        base_waypoints = self.base_lane.waypoints[closest_idx:farthest_idx]
+
+        # If there is no stopsign or the given stopsign is out of the range of interest, just keep driving
+        if self.stopline_wp_idx == -1 or (self.stopline_wp_idx >= farthest_idx):
+            lane.waypoints = base_waypoints
+        else: # If the stopsign is relevant for us (in our planning range), calculate when the decelerate
+            lane.waypoints = self.decelerate_waypoints(base_waypoints, closest_idx)
+
+        return lane
+
+
+    def decelerate_waypoints(self, waypoints, closest_idx):
+        # Create array to return new waypoints for deceleration
+        temp = []
+        # Iterate through all waypoints
+        for i, wp in enumerate(waypoints):
+            # Create a new waypoint instance to avoid overwriting the original ones
+            p = Waypoint() # ROS Waypoint instance
+            p.pose = wp.pose # Copy the position information of the original waypoint instance
+
+            # Get waypoint index to stop. The -2 is required, because otherwise the car would
+            # exactly stop staying on the middle of the stopline but it has to stop a few meters before
+            stop_idx = max(self.stopline_wp_idx - closest_idx - 2, 0)
+            # Get distance from the current-waypoint to the waypoint-to-stop to make a 
+            # smooth deceleration as we get closer to that point
+            dist = self.distance(waypoints, i, stop_idx)
+            # Calculate velocity for the current waypoint base on the maximum deceleration value and distance to that point
+            vel = math.sqrt(2 * MAX_DECEL * dist)
+            if vel < 1.:
+                vel = 0.
+
+            # Use the smaller value of the following two:
+            #    - maximum-speed due to speed-limit
+            #    - decelerating cause by detected red traffic light
+            p.twist.twist.linear.x = min(vel, wp.twist.twist.linear.x) 
+            temp.append(p)
+        return temp
+
+
+    def traffic_cb(self, msg):
+        self.stopline_wp_idx = msg.data
 
     # Refresh current car-position information
     def pose_cb(self, msg):
@@ -105,7 +152,7 @@ class WaypointUpdater(object):
     # Base-Waypoints are just published once. Ensure to store them in our variables
     def waypoints_cb(self, waypoints):
         # Store waypoints in local variable for class-instance
-        self.base_waypoints = waypoints
+        self.base_lane = waypoints
         # Create the KDTree which help us to find the waypoint-informations way more efficient
         # KDTree well explained can be found here: https://www.youtube.com/watch?v=TLxWtXEbtFE
         if not self.waypoints_2d:

@@ -39,6 +39,7 @@ To run the server-program on your local enviroment:
 
 ``` sh
 # Clone this repository
+
 git clone <Repository>
 cd <Repository-Folder>
 
