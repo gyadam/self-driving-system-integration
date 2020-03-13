@@ -98,7 +98,7 @@ class DBWNode(object):
 
         scmd = SteeringCmd()
         scmd.enable = True
-        scmd.steering_wheel_cmd = steer
+        scmd.steering_wheel_angle_cmd = steer
         self.steer_pub.publish(scmd)
 
         bcmd = BrakeCmd()
