@@ -22,7 +22,6 @@ class TLDetector(object):
         rospy.init_node('tl_detector')
 
         self.pose = None
-        self.waypoints = None
         self.camera_image = None
         self.waypoints_2d = None
         self.waypoint_tree = None
@@ -130,13 +129,13 @@ class TLDetector(object):
         #    self.prev_light_loc = None
         #    return False
 
-        #cv_image = self.bridge.imgmsg_to_cv2(self.camera_image, "bgr8")
+        cv_image = self.bridge.imgmsg_to_cv2(self.camera_image, "bgr8")
 
         #Get classification
-        #return self.light_classifier.get_classification(cv_image)
+        return self.light_classifier.get_classification(cv_image)
 
         # For testing, use states provided by simulator:
-        return light.state
+        #return light.state
 
     def process_traffic_lights(self):
         """Finds closest visible traffic light, if one exists, and determines its
