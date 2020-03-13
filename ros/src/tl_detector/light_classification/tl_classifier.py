@@ -17,16 +17,16 @@ ckpt_path = '../../../../classifier/model/frozen_inference_graph.pb'
 class TLClassifier(object):
     def __init__(self):
         #TODO load classifier
-    self.detection_graph = tf.Graph()
-    with detection_graph.as_default():
-        od_graph_def = tf.GraphDef()
-        with tf.gfile.GFile(ckpt_path, 'rb') as fid:
-            serialized_graph = fid.read()
-            od_graph_def.ParseFromString(serialized_graph)
-            tf.import_graph_def(od_graph_def, name='')
-    self.image_tensor = self.detection_graph.get_tensor_by_name('image_tensor:0')
-    self.detection_scores = self.detection_graph.get_tensor_by_name('detection_scores:0')
-    self.detection_classes = self.detection_graph.get_tensor_by_name('detection_classes:0')
+        self.detection_graph = tf.Graph()
+        with detection_graph.as_default():
+            od_graph_def = tf.GraphDef()
+            with tf.gfile.GFile(ckpt_path, 'rb') as fid:
+                serialized_graph = fid.read()
+                od_graph_def.ParseFromString(serialized_graph)
+                tf.import_graph_def(od_graph_def, name='')
+        self.image_tensor = self.detection_graph.get_tensor_by_name('image_tensor:0')
+        self.detection_scores = self.detection_graph.get_tensor_by_name('detection_scores:0')
+        self.detection_classes = self.detection_graph.get_tensor_by_name('detection_classes:0')
 
     def load_image_into_numpy_array(image):
         (im_width, im_height) = image.size
