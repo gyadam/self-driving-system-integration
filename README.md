@@ -1,10 +1,10 @@
 # Self-Driving Car Engineer - Final Project
 
-Final (Capstone) Project of Udacity's Self-Driving Car Engineer Nanodegree Program
+Final (Capstone) Project of [Udacity's Self-Driving Car Engineer Nanodegree](https://www.udacity.com/course/self-driving-car-engineer-nanodegree--nd013) Program
 
 ## Introducing
 
-The goal of the project is to capsulate the whole gained knowledge of the "Self-Driving Car Engineer"-Nanodegree course from Udaciyt and use it to control a real-driving-car on a test-track in California.
+The goal of the project is to capsulate the whole gained knowledge of the "Self-Driving Car Engineer"-Nanodegree course from Udacity and use it to control a real-driving-car on a test-track in San Francisco - California.
 The project includes the usage of the [Roboter-Operating-System](https://en.wikipedia.org/wiki/Robot_Operating_System) (short: ROS) which is a framework mostly used in the fields of robotics and autonomous systems.
 
 
@@ -54,19 +54,18 @@ source ./devel/setup.bash
 roslaunch ./launch/styx.launch
 ```
 
-To see the result you need to download the [simulator](https://github.com/udacity/CarND-Capstone/releases) (we have tested it using version 1.3) and run it. Ensure that port 4567 is free to used.
+To see the result you need to download the [simulator](https://github.com/udacity/CarND-Capstone/releases) (we have tested it using version 1.3) and run it. Ensure that port 4567 is free to use.
 
 ---
 
 ## Referencens and additional reading material
 
 The following references/links/papers gave us inspiration and helped us to solve the project.
-- [Short description 1](https://udacity.com)
-- [Short description 2](https://udacity.com)
-- [Short description 3](https://udacity.com)
+[Tensorflow detection model zoo](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md): A list of pretrained models for detection and classification in a single network.
+
+[Tutorial - TensorFlow image recognition and object detection api](https://missinglink.ai/guides/tensorflow/tensorflow-image-recognition-object-detection-api-two-quick-tutorials/): Tutorial how to train existing detection and classification networks for own different data-sets.
 
 We used data for the Traffic Light Detection from following sources:
-
 - Alex Lechner's [GitHub repository](https://github.com/alex-lechner/Traffic-Light-Classification) ("The Lazy Approach")
 
 More about the Self-Driving Car Engineer Nanodegree Program at Udacity can be found here:
@@ -97,7 +96,7 @@ Our task was to implement the Traffic Light Detection Node, the Waypoint Updater
 
 ![](imgs/ROS_TLD_Node.png)
 
-### TODO @gaurav: Please add here an explenation of the Traffic Light Node (Replace Lorem ipsum placeholder). 
+### TODO @gaurav: Please add here an explanation of the Traffic Light Node (Replace Lorem ipsum placeholder). 
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dictum sapien vel rutrum ultricies. Mauris eu elementum est. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nunc et tortor id eros efficitur suscipit. Sed vitae sem eros. Sed nec ligula euismod, bibendum odio eu, pretium.
 
@@ -222,7 +221,7 @@ During testing we encountered an "overshooting" problem in the steering (s. imag
 
 | "Overshooting" issue       | Fixed "Overshooting"             |
 | -------------------------- | -------------------------------- |
-| ![](imgs/overshooting.gif) | ![](imgs/overshooting_fixed.gif) |
+| ![GIF to visualize overshooting](imgs/overshooting.gif) | ![GIF to visualize fixed overshooting](imgs/overshooting_fixed.gif) |
 
 The DBW Node was implemented by Lukas Leonard Köning and was reviewed by Adam Gyarmati.
 
