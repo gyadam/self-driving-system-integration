@@ -26,17 +26,18 @@ flags.DEFINE_string('image_dir', '', 'Path to images')
 FLAGS = flags.FLAGS
 
 
-# Label map used from "class.csv"
-# Red = 1
-# Yellow = 2
-# Green = 0
+# Label map:
+# Green => 1
+# Red => 2
+# Yellow => 3
+
 def class_text_to_int(row_label):
-    if row_label == 'Red':
+    if row_label == 'Green':
         return 1
-    elif row_label == 'Green':
-        return 0
-    elif row_label == 'Yellow':
+    elif row_label == 'Red':
         return 2
+    elif row_label == 'Yellow':
+        return 3
     else:
         None
 
