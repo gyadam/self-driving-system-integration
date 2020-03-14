@@ -51,6 +51,16 @@ class TLClassifier(object):
                 (scores, classes) = sess.run([self.detection_scores, self.detection_classes],feed_dict={self.image_tensor: image_np_expanded})
 
             if np.max(scores) > 0.6:
-                light = classes[np.where(scores == np.amax(scores))]
+                max_score_index = np.argmax(scores)
+                light = np.squeeze(classes)[max_score_index]
 
-            return light
+            if light == TrafficLight.UNKNOWN:
+                print("Traffic light state: UNKNOWN")
+            elif light == TrafficLight.GREEN:
+                print("Traffic light state: GREEN")
+            elif light == TrafficLight.RED:
+                print("Traffic light state: RED")
+            elif light == TrafficLight.YELLOW:
+                print("Traffic light state: YELLOW")
+
+        return light
