@@ -41,7 +41,6 @@ class Controller(object):
         '''
         Function to achieve throttle, brake and steering values by using PID and yaw controller
         '''
-    
 
         ## Reset PID controller, if the DBW is disabled
         # This prevents an accumelation of the error, when e.g. standing at a traffic light
@@ -79,5 +78,7 @@ class Controller(object):
             throttle = 0
             decel = max(delta_v, self.decel_limit)
             brake = abs(decel)*self.vehicle_m*self.wheel_r #N*m - Torque
+
+        # rospy.logwarn("Control run. Throttle:" + str(throttle) + ", Brake: " + str(brake) + ", Steering: " + str(steering))
 
         return throttle, brake, steering
