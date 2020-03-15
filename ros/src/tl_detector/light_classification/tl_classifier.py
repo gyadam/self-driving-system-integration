@@ -12,7 +12,7 @@ from io import StringIO
 from matplotlib import pyplot as plt
 from PIL import Image
 
-ckpt_path = '../../../classifier/model/frozen_inference_graph.pb'
+ckpt_path = '../../../classifier/model/frozen_inference_graph_mobilenet.pb'
 
 class TLClassifier(object):
     def __init__(self):
