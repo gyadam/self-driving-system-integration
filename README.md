@@ -44,6 +44,7 @@ cd <Repository-Folder>
 
 # Install requirements
 pip install -r requirements.txt
+pip intstall matplotlib
 
 # Build project and source ros-enviroment-variables
 cd ros
