@@ -101,7 +101,7 @@ Our task was to implement the Traffic Light Detection Node, the Waypoint Updater
 
 ![](imgs/ROS_TLD_Node.png)
 
-### TODO @gaurav: Please add here an explanation of the Traffic Light Node (Replace Lorem ipsum placeholder). 
+### TODO: Complete introduction
 
 The Traffic Light Node is responsible for handling the traffic lights. It subscribes to the `base_waypoints` ROS topic (all waypoints of the track), the `image_color` ROS topic (image stream of the camera) and the `current_pose` ROS topic (position data to determine the current location). We also used the `/vehicle/traffic_lights` ROS node for testing purposes which delivers us information about all traffic lights from the simulator. The Traffic Light Node only publishes the index of the waypoint of the next upcoming red light's stop line to the `traffic_waypoint` ROS topic.
 
@@ -117,7 +117,7 @@ In this project we have skipped the explained data collection by re-using alread
 
 **Object Detection Model**
 
-### TODO @gaurav: Please add here an explenation of the model you used (architecture, training, ...)(Replace Lorem ipsum placeholder).
+### TODO: Add here an explanation of the model we used (architecture, training, ...).
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dictum sapien vel rutrum ultricies. Mauris eu elementum est. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nunc et tortor id eros efficitur suscipit. Sed vitae sem eros. Sed nec ligula euismod, bibendum odio eu, pretium.
 
