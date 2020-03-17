@@ -32,6 +32,10 @@ docker build . -t capstone
 
 # Run
 docker run -p 4567:4567 -v $PWD:/capstone -v /tmp/log:/root/.ros/ --rm -it capstone
+
+# Setup the Docker container
+chmod +x setup_docker.bash
+./setup_docker.bash
 ```
 
 To run the server-program on your local enviroment:
@@ -44,7 +48,6 @@ cd <Repository-Folder>
 
 # Install requirements
 pip install -r requirements.txt
-pip intstall matplotlib
 
 # Build project and source ros-enviroment-variables
 cd ros
