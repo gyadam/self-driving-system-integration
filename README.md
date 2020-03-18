@@ -4,7 +4,7 @@ Final (Capstone) Project of [Udacity's Self-Driving Car Engineer Nanodegree](htt
 
 ## Introducing
 
-The goal of the project is to capsulate the whole gained knowledge of the "Self-Driving Car Engineer"-Nanodegree course from Udacity and use it to control a real-driving-car on a test-track in San Francisco - California.
+The goal of the project is to encapsulate the whole gained knowledge of the "Self-Driving Car Engineer"-Nanodegree course from Udacity and use it to control a real-driving-car on a test-track in San Francisco - California.
 The project includes the usage of the [Roboter-Operating-System](https://en.wikipedia.org/wiki/Robot_Operating_System) (short: ROS) which is a framework mostly used in the fields of robotics and autonomous systems.
 
 
@@ -38,7 +38,7 @@ chmod +x setup_docker.bash
 ./setup_docker.bash
 ```
 
-To run the server-program on your local enviroment:
+To run the server-program on your local environment:
 
 ``` sh
 # Clone this repository
@@ -62,13 +62,13 @@ To see the result you need to download the [simulator](https://github.com/udacit
 
 ---
 
-## Referencens and additional reading material
+## References and additional reading material
 
 The following references/links/papers gave us inspiration and helped us to solve the project.
 
 - [Faster R-CNN paper](https://arxiv.org/pdf/1506.01497.pdf): Original paper of Faster R-CNN
 - [Review: Faster R-CNN (Object Detection)](https://towardsdatascience.com/review-faster-r-cnn-object-detection-f5685cb30202): A brief explanation of Faster R-CNN 
-- [Tensorflow detection model zoo](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md): A list of pretrained models for detection and classification in a single network.
+- [Tensorflow detection model zoo](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md): A list of pre-trained models for detection and classification in a single network.
 - [Tutorial - TensorFlow image recognition and object detection api](https://missinglink.ai/guides/tensorflow/tensorflow-image-recognition-object-detection-api-two-quick-tutorials/): Tutorial how to train existing detection and classification networks for own different data-sets.
 
 We used data for the Traffic Light Detection from following sources:
@@ -94,7 +94,7 @@ In this documentation the structure and the way how we achieved the goal (contro
 
 ![](imgs/ROS_architecture.png)
 
-The image above shows the system architecture of our implementation. There are three main subsystems in an autonomous vehicle architecture: Perception, Planning, Control. The perception subsystem processes sensor information (like camera images, LiDAR point clouds or IMU data) to information that can be used by the planning subsystem. The planning subsystem takes in this information and decides what the car should do. It creates trajectorys for the control subsystem. The control subsystem takes in this information, uses different controllers to create throttle, break and steering commands and sends them to the components of the car. 
+The image above shows the system architecture of our implementation. There are three main subsystems in an autonomous vehicle architecture: Perception, Planning, Control. The perception subsystem processes sensor information (like camera images, LiDAR point clouds or IMU data) to information that can be used by the planning subsystem. The planning subsystem takes in this information and decides what the car should do. It creates trajectories for the control subsystem. The control subsystem takes in this information, uses different controllers to create throttle, break and steering commands and sends them to the components of the car. 
 
 Our task was to implement the Traffic Light Detection Node, the Waypoint Updater Node and the DBW Node. These are explained in the next sections in more detail.
 
@@ -147,7 +147,7 @@ The development was split up into two separate feature branches. Moreover we dec
 The Waypoint Updater subscribes to four ROS topics, processes the given data and publishes to a single topic (see visualization below) which represents the final waypoints to drive along. 
 ![visualization of waypoint_updater-node](imgs/ROS_WPU_Node.png)
 
-| Action | ROS topic | Explaination |
+| Action | ROS topic | Explanation |
 |:----:|:----:|:----|
 |Subscribe|base_waypoints|This topic is only published once when the simulator starts. It returns a list of waypoints (e.g.: GPS-waypoints) which represents waypoints to drive along.|
 |Subscribe|current_pose|This nodes is used to get information about the current position of the car (x-y-coordinates and heading-direction).|
@@ -171,7 +171,7 @@ else: # If the stopsign is relevant for us (in our planning range), calculate wh
   lane.waypoints = self.decelerate_waypoints(base_waypoints, closest_idx)
 ```
 
-- Iterate through waypoints to apply deceleration-curve for a smooth stop infront of a traffic-light:
+- Iterate through waypoints to apply deceleration-curve for a smooth stop at a traffic-light:
 
 > Note: For minimization of the code the comments were shorted/changed in the following snippet
 ```python
@@ -207,10 +207,10 @@ The DBW Node (Drive-By-Wire) is responsible for sending throttle, steering and b
 
 In this implementation the DBW Node subscribes to the `current_velocity` ROS topic (current velocity of the car), to the `twist_cmd` ROS topic (velocity commands from the Waypoint Follower Node) and to the `dbw_enabled` ROS topic (information about the DBW system status). The DBW Node publishes onto the `throttle_cmd`, `steering_cmd` and the `brake_cmd` ROS topics. 
 
-The implementation is splitted up into two files: `ros/src/twist_controller/dbw_node.py` and `ros/src/twist_controller/twist_controller.py`. Inside the `dbw_node.py` file is the whole ROS logic implemented (Subscribers, Publisher) and also the loop, which runs at 50Hz the controller. It only publishes onto the topics, if drive by wire is enabled. There are cases, where drive by wire is disabled, e.g. when the car stands at a red traffic light. 
+The implementation is splited up into two files: `ros/src/twist_controller/dbw_node.py` and `ros/src/twist_controller/twist_controller.py`. Inside the `dbw_node.py` file is the whole ROS logic implemented (Subscribers, Publisher) and also the loop, which runs at 50Hz the controller. It only publishes onto the topics, if drive by wire is enabled. There are cases, where drive by wire is disabled, e.g. when the car stands at a red traffic light. 
 
 The controller is inside the `twist_controller.py` file. It uses a Lowpass Filter, a PID controller and a Yaw controller (`yaw_controller.py`) to achieve the throttle and steering commands. To reduce oscillation from the velocity command (from the `twist_cmd` topic) the Lowpass filter is used. Since the integrational error of the PID controller would increase, when the vehicle does not move, the PID controller has to be reseted every time the DBW is disabled.
-The brake command is calculated seperatly as torque value:
+The brake command is calculated separately as torque value:
 
 ```python
 ## Brake value calculation
@@ -241,20 +241,19 @@ The DBW Node was implemented by Lukas Leonard Köning and was reviewed by Adam G
 ## Result
 
 Below you have two excellent visualization of our resulting algorithm.
-
-In the first image you can see the acceleration after the traffic-light switched from red to green.
 ![GIF to visualize overshooting](imgs/result_redlight.gif) 
 
-In the second image you can clearly see the deceleration due the fact that the car realises a red-traffic-light ahead. The deceleration is kinda smooth and even as the traffic-light turns green while the cars is decelerting the change is realised by the car and it stop the deceleration-process and continues the driving by accelerate. The detection, classification and behavior planning is done in realtime.
-![GIF to visualize fixed overshooting](imgs/result_slowdown.gif) |
+In the first image you can see the acceleration after the traffic-light switched from red to green.
 
+![GIF to visualize fixed overshooting](imgs/result_slowdown.gif) 
 
-As you can see in the first image we realised that there is a little delay between the traffic light change from red -> green and the start of the acceleration of the car.
-This happend due to two factors:
-1.) Instead of a faster and less reliable neural-network we used the more reliable approach because in real self-driving cars there is more computation-power that in our local enviroment and so we have both the accurancy which is required for safty and the required speed.
-2.) Before take in account of a different classification than before we ensure that the classified state was found three times to avoid wrong behavior based on a wrong classification which may can be caused by noisy-image-data or similar problems.
+In the second image you can clearly see the deceleration due the fact that the car realizes a red-traffic-light ahead. The deceleration is smooth. And even as the traffic-light turns green, while the cars is decelerating, the change is realized by the car and it stops decelerating and accelerates again. The detection, classification and behavior planning is done in real time.
 
-Last but not least we also decided that the safest option is to stop the car which means that if we are unsure about the current prediction we are more likly to choose the saftest-option which is stopping the car and wait for more data.
+You can see a little delay between the change of the traffic light and the reaction of the car in the first image. This is caused by to two factors:
+
+1. We chose a more reliable neural network instead of a faster one. In real self-driving cars there is more computational power than we have on our local environments so there would be less delay but still the reliability which is crucial for safety in safe driving cars.
+2. Before changing the classification every image we wait for three classifications of the same type to avoid wrong classification due to noisy images from the camera.
+3. Last but not least we also decided to stay safe and stop the car, if we are unsure of our current prediction and wait for more data.
 
 ---
 
