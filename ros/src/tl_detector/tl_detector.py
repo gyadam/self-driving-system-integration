@@ -82,7 +82,6 @@ class TLDetector(object):
         """
         self.has_image = True
         self.camera_image = msg
-        light_wp, state = self.process_traffic_lights()
 
         if (self.image_cnt % 3 == 0):
 
@@ -92,6 +91,8 @@ class TLDetector(object):
             of times till we start using it. Otherwise the previous stable state is
             used.
             '''
+            light_wp, state = self.process_traffic_lights()
+
             if self.state != state:
                 self.state_count = 0
                 self.state = state
