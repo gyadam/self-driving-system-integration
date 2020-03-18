@@ -70,6 +70,8 @@ The following references/links/papers gave us inspiration and helped us to solve
 - [Review: Faster R-CNN (Object Detection)](https://towardsdatascience.com/review-faster-r-cnn-object-detection-f5685cb30202): A brief explanation of Faster R-CNN 
 - [Tensorflow detection model zoo](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md): A list of pre-trained models for detection and classification in a single network.
 - [Tutorial - TensorFlow image recognition and object detection api](https://missinglink.ai/guides/tensorflow/tensorflow-image-recognition-object-detection-api-two-quick-tutorials/): Tutorial how to train existing detection and classification networks for own different data-sets.
+- [Tutorial - TensorFlow image recognition and object detection api](https://missinglink.ai/guides/tensorflow/tensorflow-image-recognition-object-detection-api-two-quick-tutorials/)
+- [Tutorial - How to train an Object Detection Classifier](https://www.youtube.com/watch?v=Rgpfk6eYxJA)
 
 We used data for the Traffic Light Detection from following sources:
 - Alex Lechner's [GitHub repository](https://github.com/alex-lechner/Traffic-Light-Classification) ("The Lazy Approach")
@@ -120,43 +122,50 @@ For the traffic light detection and classification we are using a combined appro
 
 We used a pre-trained model, froze most of the layers and retrained only the classification layers to classify red, yellow and green traffic lights solely. We trained a single model on both simulator and real-world data.
 
-The traffic light classifier was created by retraining an existing model from the [TensorFlow Object Detection Model Zoo](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md). We chose the "Faster R-CNN" model, because its accuracy was good on traffic lights and it was still fast enough to use in our
-application.
+The traffic light classifier was created by retraining an existing model from the [TensorFlow Object Detection Model Zoo](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md). We chose the "Faster R-CNN" model, because its accuracy was good on traffic lights and it is still fast enough to use in our application.
 
 To retrain the model, the following steps were made:
 - Clone the 1.5 branch of [tensorflow/models](https://github.com/tensorflow/models)
-- Install the [Tensorflow Object Detection API](https://github.com/tensorflow/models/blob/r1.5/research/object_detection/g3doc/installation.md)
-- Create TFRecord files for the training and test data from .csv files:
 
-```python2.7 generate_tfrecord_by_csv.py --csv_input=data/train_boxes.csv --output_path=train2.record --image_dir=images/train```
+- Install the [Tensorflow Object Detection API](https://github.com/tensorflow/models/blob/r1.5/research/object_detection/g3doc/installation.md)
+
+- Create TFRecord files for the training and test data from .csv files by running:
+
+  ```shell
+  python2.7 generate_tfrecord_by_csv.py --csv_input=data/train_boxes.csv --output_path=train2.record --image_dir=images/train
+  ```
 
 - Create a label map with IDs for each class in label_map.pbtxt
-- Update the number of classes and provide all necessary directories in the .config file used for training
-- Train the model using the following command:
 
-```python2.7 train.py --logtostderr --train_dir=training/ --pipeline_config_path=training/faster_rcnn_inception_v2_pets.config```
+- Update the number of classes and provide all necessary directories in the .config file used for training
+
+- Train the model by using the following command:
+
+  ```shell
+  python2.7 train.py --logtostderr --train_dir=training/ --pipeline_config_path=training/faster_rcnn_inception_v2_pets.config
+  ```
 
 - Export the model, creating a .pb file using the following command:
-```python2.7 export_inference_graph.py --input_type image_tensor --pipeline_config_path ../training/faster_rcnn_inception_v2_pets.config --trained_checkpoint_prefix ../training/model.ckpt-NUM_STEPS --output_directory ../inference_graph```
 
-Where NUM_STEPS is the number of steps corresponding to the selected checkpoint you would like to export.
+  ```shell
+  python2.7 export_inference_graph.py --input_type image_tensor --pipeline_config_path ../training/faster_rcnn_inception_v2_pets.config --trained_checkpoint_prefix ../training/model.ckpt-NUM_STEPS --output_directory ../inference_graph
+  ```
 
-Setting up the training environment was quite complicated, but the following two resources were very helpful in the process:
+  Where NUM_STEPS is the number of steps corresponding to the selected checkpoint you would like to export.
 
-- [Tutorial - TensorFlow image recognition and object detection api](https://missinglink.ai/guides/tensorflow/tensorflow-image-recognition-object-detection-api-two-quick-tutorials/)
-- [Tutorial - How to train an Object Detection Classifier](https://www.youtube.com/watch?v=Rgpfk6eYxJA)
+Setting up the training environment was quite complicated, but two resources were very helpful in the process (see references). Training was done on a Lenovo L340 laptop with an Nvidia GeForce GTX 1050 GPU, Intel i7 CPU with 8 GB RAM, for 20429 steps. The process was followed using Tensorboard:
 
-Training was done on a Lenovo L340 laptop with an Nvidia GeForce GTX 1050 GPU, Intel i7 CPU with 8 GB RAM, for 20429 steps. The process was followed using Tensorboard:
-
-```tensorboard --logdir=<TRAINING_DIR>```
+```shell
+tensorboard --logdir=<TRAINING_DIR>
+```
 
 ![](imgs/tensorboard.png)
 
-The classifier relies heavily on GPU computational resources and therefore when first testing it we ran into latency issues, where classification was correct but it took too much time and didn't stop the car in time. This was solved after realizing that we had been initializing a Tensorflow session for every classification, which was very time-consuming. In the current solution we initialize a single Tensorflow session and use it for all further classification tasks.
+The classifier relies heavily on GPU computational resources and therefore when first testing it we ran into latency issues, where classification was correct but it took too much time and did not stop the car in time. This was solved after realizing that we have been initializing a Tensorflow session for every classification, which was very time-consuming. In the current solution we initialize a single Tensorflow session and use it for all further classification tasks.
 
 **Classification Pipeline**
 
-Classification of captured images happens when ```tl_detector.py``` calls the ```get_classification``` method of the ```light_classifier``` object. This runs the already existing Tensorflow session, which takes the captured image as input, and - using the retrained model - outputs the color of the nearest traffic light and the classification score as a fraction from 0.0 to 1.0. These are both printed to stdout for debugging purposes.
+Classification of captured images happens when ```tl_detector.py``` calls the ```get_classification()``` method of the ```light_classifier``` object. This runs the already existing TensorFlow session, which takes the captured image as input, and - using the retrained model - outputs the color of the nearest traffic light and the classification score as a fraction from 0.0 to 1.0. These are both printed to stdout for debugging purposes.
 
 The process can be made less resource-intensive by only processing every second/third image in ```tl_detector.py```, however this was not necessary in our case.
 
