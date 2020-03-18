@@ -291,6 +291,7 @@ In the first image you can see the acceleration after the traffic-light switched
 In the second image you can clearly see the deceleration due the fact that the car realizes a red-traffic-light ahead. The deceleration is smooth. And even as the traffic-light turns green, while the cars is decelerating, the change is realized by the car and it stops decelerating and accelerates again. The detection, classification and behavior planning is done in real time.
 
 Additionally, we made a longer video of the car making an entire round, which is available on Youtube:
+
 [Udacity Self-Driving Car Nanodegree Capstone Project Video](https://youtu.be/RByTla7bgrI)
 
 You can see a little delay between the change of the traffic light and the reaction of the car in the first image. This is caused by to two factors:
