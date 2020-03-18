@@ -118,11 +118,7 @@ In this project we have skipped the explained data collection by re-using alread
 
 For the traffic light detection and classification we are using a combined approach toward detection and classification. Basically you can separate detection and classification and use two neural networks or even mix machine learning and hard coded solutions (e.g. SSD and hard coded classifier). On the other hand you can combine detection and classification into one neural network. We are using Faster R-CNN which consists of following parts: a region proposal network, region of interest pooling and finally classification and linear regression. You can find more information about Faster R-CNN in the articles linked in the references chapter above.
 
-We used a pre-trained model, froze most of the layers and retrained only the classification layers to classify red, yellow and green traffic lights solely. After training on GPU for a long time we achieved the performance needed. Particularly we had to train two separate models for simulator and real-world data.
-
-The classifier relies heavily on GPU computational resources and therefore when first testing it we ran into latency issues, where classification was correct but it took too much time and didn't stop the car in time. This was solved after realizing that we had been initializing a Tensorflow session for every classification, which was very time-consuming. In the current solution we initialize a single Tensorflow session and use it for all further classification tasks.
-
-**Classification Pipeline**
+We used a pre-trained model, froze most of the layers and retrained only the classification layers to classify red, yellow and green traffic lights solely. We trained a single model on both simulator and real-world data.
 
 The traffic light classifier was created by retraining an existing model from the [TensorFlow Object Detection Model Zoo](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md). We chose the "Faster R-CNN" model, because its' performance was good on traffic lights, and it was still fast enough to use in our application.
 
@@ -154,6 +150,14 @@ Training was done on a Lenovo L340 laptop with an Nvidia GeForce GTX 1050 GPU, I
 ```tensorboard --logdir=<TRAINING_DIR>```
 
 ![](imgs/tensorboard.png)
+
+The classifier relies heavily on GPU computational resources and therefore when first testing it we ran into latency issues, where classification was correct but it took too much time and didn't stop the car in time. This was solved after realizing that we had been initializing a Tensorflow session for every classification, which was very time-consuming. In the current solution we initialize a single Tensorflow session and use it for all further classification tasks.
+
+**Classification Pipeline**
+
+Classification of captured images happens when ```tl_detector.py``` calls the ```get_classification``` method of the ```light_classifier``` object. This runs the already existing Tensorflow session, which takes the captured image as input, and - using the retrained model - outputs the color of the nearest traffic light and the classification score as a fraction from 0.0 to 1.0. These are both printed to stdout for debugging purposes.
+
+The process can be made less resource-intensive by only processing every second/third image in ```tl_detector.py```, however this was not necessary in our case.
 
 The Traffic Light Detection was implemented by Adam Gyarmati and Gaurav Asati. It was reviewed by Kevin Hubert and Lukas Leonard Köning.
 
