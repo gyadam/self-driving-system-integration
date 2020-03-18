@@ -246,6 +246,7 @@ In the first image you can see the acceleration after the traffic-light switched
 ![GIF to visualize overshooting](imgs/result_redlight.gif) 
 
 In the second image you can clearly see the deceleration due the fact that the car realises a red-traffic-light ahead. The deceleration is kinda smooth and even as the traffic-light turns green while the cars is decelerting the change is realised by the car and it stop the deceleration-process and continues the driving by accelerate. The detection, classification and behavior planning is done in realtime.
+
 ![GIF to visualize fixed overshooting](imgs/result_slowdown.gif) |
 
 
