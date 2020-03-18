@@ -120,7 +120,7 @@ For the traffic light detection and classification we are using a combined appro
 
 We used a pre-trained model, froze most of the layers and retrained only the classification layers to classify red, yellow and green traffic lights solely. After training on GPU for a long time we achieved the performance needed. Particularly we had to train two separate models for simulator and real-world data.
 
-In the beginning we had serious latency problems (car passed red lights), but we fixed them by.... **TODO: Complete...** 
+The classifier relies heavily on GPU computational resources and therefore when first testing it we ran into latency issues, where classification was correct but it took too much time and didn't stop the car in time. This was solved after realizing that we had been initializing a Tensorflow session for every classification, which was very time-consuming. In the current solution we initialize a single Tensorflow session and use it for all further classification tasks.
 
 **Classification Pipeline**
 
