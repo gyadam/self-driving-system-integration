@@ -57,12 +57,12 @@ class TLClassifier(object):
                 light = np.squeeze(classes)[max_score_index]
 
             if light == TrafficLight.UNKNOWN:
-                print("Traffic light state: UNKNOWN")
+                print("Traffic light state: UNKNOWN ")
             elif light == TrafficLight.GREEN:
-                print("Traffic light state: GREEN")
+                print("Traffic light state: GREEN | " + str(np.squeeze(scores)[max_score_index]))
             elif light == TrafficLight.RED:
-                print("Traffic light state: RED")
+                print("Traffic light state: RED | " + str(np.squeeze(scores)[max_score_index]))
             elif light == TrafficLight.YELLOW:
-                print("Traffic light state: YELLOW")
+                print("Traffic light state: YELLOW | " + str(np.squeeze(scores)[max_score_index]))
 
         return light
