@@ -147,7 +147,7 @@ Where NUM_STEPS is the number of steps corresponding to the selected checkpoint 
 Setting up the training environment was quite complicated, but the following two resources were very helpful in the process:
 
 - [Tutorial - TensorFlow image recognition and object detection api](https://missinglink.ai/guides/tensorflow/tensorflow-image-recognition-object-detection-api-two-quick-tutorials/)
-- [Tutorial (Youtube) - How to train an Object Detection Classifier] (https://www.youtube.com/watch?v=Rgpfk6eYxJA)
+- [Tutorial - How to train an Object Detection Classifier] (https://www.youtube.com/watch?v=Rgpfk6eYxJA)
 
 Training was done on a Lenovo L340 laptop with an Nvidia GeForce GTX 1050 GPU, Intel i7 CPU with 8 GB RAM, for 20429 steps. The process was followed using Tensorboard:
 
