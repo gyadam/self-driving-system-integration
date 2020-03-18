@@ -32,6 +32,10 @@ docker build . -t capstone
 
 # Run
 docker run -p 4567:4567 -v $PWD:/capstone -v /tmp/log:/root/.ros/ --rm -it capstone
+
+# Setup the Docker container
+chmod +x setup_docker.bash
+./setup_docker.bash
 ```
 
 To run the server-program on your local enviroment:
@@ -61,9 +65,11 @@ To see the result you need to download the [simulator](https://github.com/udacit
 ## Referencens and additional reading material
 
 The following references/links/papers gave us inspiration and helped us to solve the project.
-[Tensorflow detection model zoo](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md): A list of pretrained models for detection and classification in a single network.
 
-[Tutorial - TensorFlow image recognition and object detection api](https://missinglink.ai/guides/tensorflow/tensorflow-image-recognition-object-detection-api-two-quick-tutorials/): Tutorial how to train existing detection and classification networks for own different data-sets.
+- [Faster R-CNN paper](https://arxiv.org/pdf/1506.01497.pdf): Original paper of Faster R-CNN
+- [Review: Faster R-CNN (Object Detection)](https://towardsdatascience.com/review-faster-r-cnn-object-detection-f5685cb30202): A brief explanation of Faster R-CNN 
+- [Tensorflow detection model zoo](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md): A list of pretrained models for detection and classification in a single network.
+- [Tutorial - TensorFlow image recognition and object detection api](https://missinglink.ai/guides/tensorflow/tensorflow-image-recognition-object-detection-api-two-quick-tutorials/): Tutorial how to train existing detection and classification networks for own different data-sets.
 
 We used data for the Traffic Light Detection from following sources:
 - Alex Lechner's [GitHub repository](https://github.com/alex-lechner/Traffic-Light-Classification) ("The Lazy Approach")
@@ -96,9 +102,9 @@ Our task was to implement the Traffic Light Detection Node, the Waypoint Updater
 
 ![](imgs/ROS_TLD_Node.png)
 
-### TODO @gaurav: Please add here an explanation of the Traffic Light Node (Replace Lorem ipsum placeholder). 
+The Traffic Light Node is responsible for handling the traffic lights. It subscribes to the `base_waypoints` ROS topic (all waypoints of the track), the `image_color` ROS topic (image stream of the camera) and the `current_pose` ROS topic (position data to determine the current location). We also used the `/vehicle/traffic_lights` ROS node for testing purposes which delivers us information about all traffic lights from the simulator. The Traffic Light Node only publishes the index of the waypoint of the next upcoming red light's stop line to the `traffic_waypoint` ROS topic.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dictum sapien vel rutrum ultricies. Mauris eu elementum est. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nunc et tortor id eros efficitur suscipit. Sed vitae sem eros. Sed nec ligula euismod, bibendum odio eu, pretium.
+We used a Neural Network approach to the traffic light detection and classification problem. Initially we implemented [RetinaNET](https://towardsdatascience.com/review-retinanet-focal-loss-object-detection-38fba6afabe4) which worked really good but unfortunately is not compatible with the TensorFlow version (1.3) required by the real testing vehicle (Carla). So we went a step back to an older approach to the problem: Faster R-CNN.
 
 **Data collection**
 
@@ -108,15 +114,21 @@ For the real world data we had to extract images from shared ROS bag files. To g
 
 In this project we have skipped the explained data collection by re-using already available data (s. references section above).
 
-**Object Detection Model**
+**Object Detection and Classification Model**
 
-### TODO @gaurav: Please add here an explenation of the model you used (architecture, training, ...)(Replace Lorem ipsum placeholder).
+For the traffic light detection and classification we are using a combined approach toward detection and classification. Basically you can separate detection and classification and use two neural networks or even mix machine learning and hard coded solutions (e.g. SSD and hard coded classifier). On the other hand you can combine detection and classification into one neural network. We are using Faster R-CNN which consists of following parts: a region proposal network, region of interest pooling and finally classification and linear regression. You can find more information about Faster R-CNN in the articles linked in the references chapter above.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dictum sapien vel rutrum ultricies. Mauris eu elementum est. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nunc et tortor id eros efficitur suscipit. Sed vitae sem eros. Sed nec ligula euismod, bibendum odio eu, pretium.
+We used a pre-trained model, froze most of the layers and retrained only the classification layers to classify red, yellow and green traffic lights solely. After training on GPU for a long time we achieved the performance needed. Particularly we had to train two separate models for simulator and real-world data.
+
+In the beginning we had serious latency problems (car passed red lights), but we fixed them by.... **TODO: Complete...** 
+
+**Classification Pipeline**
+
+**TODO: Short explanation of classification pipeline**
 
 
 
-The Traffic Light Detection was implemented by Gaurav Asati.
+The Traffic Light Detection was implemented by Adam Gyarmati and Gaurav Asati. It was reviewed by Kevin Hubert and Lukas Leonard Köning.
 
 ### 3.) Waypoint Updater
 
@@ -228,9 +240,21 @@ The DBW Node was implemented by Lukas Leonard Köning and was reviewed by Adam G
 ---
 ## Result
 
-**Impressiv result images and video here...**
+Below you have two excellent visualization of our resulting algorithm.
 
-**Discussion of the results...**
+In the first image you can see the acceleration after the traffic-light switched from red to green.
+![GIF to visualize overshooting](imgs/result_redlight.gif) 
+
+In the second image you can clearly see the deceleration due the fact that the car realises a red-traffic-light ahead. The deceleration is kinda smooth and even as the traffic-light turns green while the cars is decelerting the change is realised by the car and it stop the deceleration-process and continues the driving by accelerate. The detection, classification and behavior planning is done in realtime.
+![GIF to visualize fixed overshooting](imgs/result_slowdown.gif) |
+
+
+As you can see in the first image we realised that there is a little delay between the traffic light change from red -> green and the start of the acceleration of the car.
+This happend due to two factors:
+1.) Instead of a faster and less reliable neural-network we used the more reliable approach because in real self-driving cars there is more computation-power that in our local enviroment and so we have both the accurancy which is required for safty and the required speed.
+2.) Before take in account of a different classification than before we ensure that the classified state was found three times to avoid wrong behavior based on a wrong classification which may can be caused by noisy-image-data or similar problems.
+
+Last but not least we also decided that the safest option is to stop the car which means that if we are unsure about the current prediction we are more likly to choose the saftest-option which is stopping the car and wait for more data.
 
 ---
 
