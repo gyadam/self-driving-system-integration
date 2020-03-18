@@ -14,7 +14,7 @@ from PIL import Image
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
 
-ckpt_path = '../../../classifier/model/frozen_inference_graph_mobilenet.pb'
+ckpt_path = '../../../classifier/model/frozen_inference_graph_faster_rcnn_v2.pb'
 
 class TLClassifier(object):
     def __init__(self):
