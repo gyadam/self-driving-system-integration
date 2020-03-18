@@ -240,9 +240,21 @@ The DBW Node was implemented by Lukas Leonard Köning and was reviewed by Adam G
 ---
 ## Result
 
-**Impressiv result images and video here...**
+Below you have two excellent visualization of our resulting algorithm.
 
-**Discussion of the results...**
+In the first image you can see the acceleration after the traffic-light switched from red to green.
+![GIF to visualize overshooting](imgs/result_redlight.gif) 
+
+In the second image you can clearly see the deceleration due the fact that the car realises a red-traffic-light ahead. The deceleration is kinda smooth and even as the traffic-light turns green while the cars is decelerting the change is realised by the car and it stop the deceleration-process and continues the driving by accelerate. The detection, classification and behavior planning is done in realtime.
+![GIF to visualize fixed overshooting](imgs/result_slowdown.gif) |
+
+
+As you can see in the first image we realised that there is a little delay between the traffic light change from red -> green and the start of the acceleration of the car.
+This happend due to two factors:
+1.) Instead of a faster and less reliable neural-network we used the more reliable approach because in real self-driving cars there is more computation-power that in our local enviroment and so we have both the accurancy which is required for safty and the required speed.
+2.) Before take in account of a different classification than before we ensure that the classified state was found three times to avoid wrong behavior based on a wrong classification which may can be caused by noisy-image-data or similar problems.
+
+Last but not least we also decided that the safest option is to stop the car which means that if we are unsure about the current prediction we are more likly to choose the saftest-option which is stopping the car and wait for more data.
 
 ---
 
