@@ -5,7 +5,7 @@ Final (Capstone) Project of [Udacity's Self-Driving Car Engineer Nanodegree](htt
 ## Introducing
 
 The goal of the project is to encapsulate the whole gained knowledge of the "Self-Driving Car Engineer"-Nanodegree course from Udacity and use it to control a real-driving-car on a test-track in San Francisco - California.
-The project includes the usage of the [Roboter-Operating-System](https://en.wikipedia.org/wiki/Robot_Operating_System) (short: ROS) which is a framework mostly used in the fields of robotics and autonomous systems.
+The project includes the usage of the [Robot Operating System](https://en.wikipedia.org/wiki/Robot_Operating_System) (short: ROS) which is a framework mostly used in the fields of robotics and autonomous systems.
 
 
 ## Team
@@ -131,27 +131,27 @@ To retrain the model, the following steps were made:
 - Install the [Tensorflow Object Detection API](https://github.com/tensorflow/models/blob/r1.5/research/object_detection/g3doc/installation.md)
 - Create TFRecord files for the training and test data from .csv files:
 
-```(venv_python2) adam@adam-ubuntu:~/Documents/models/research$ python2.7 generate_tfrecord_by_csv.py --csv_input=data/train_boxes.csv --output_path=train2.record --image_dir=images/train```
+```python2.7 generate_tfrecord_by_csv.py --csv_input=data/train_boxes.csv --output_path=train2.record --image_dir=images/train```
 
 - Create a label map with IDs for each class in label_map.pbtxt
 - Update the number of classes and provide all necessary directories in the .config file used for training
 - Train the model using the following command:
 
-```(venv_python2) adam@adam-ubuntu:~/Documents/models/research$ python2.7 train.py --logtostderr --train_dir=training/ --pipeline_config_path=training/faster_rcnn_inception_v2_pets.config```
+```python2.7 train.py --logtostderr --train_dir=training/ --pipeline_config_path=training/faster_rcnn_inception_v2_pets.config```
 
 - Export the model, creating a .pb file using the following command:
-```(venv_python2) adam@adam-ubuntu:~/Documents/models/research/object_detection$ python2.7 export_inference_graph.py --input_type image_tensor --pipeline_config_path ../training/faster_rcnn_inception_v2_pets.config --trained_checkpoint_prefix ../training/model.ckpt-NUM_STEPS --output_directory ../inference_graph```
+```python2.7 export_inference_graph.py --input_type image_tensor --pipeline_config_path ../training/faster_rcnn_inception_v2_pets.config --trained_checkpoint_prefix ../training/model.ckpt-NUM_STEPS --output_directory ../inference_graph```
 
 Where NUM_STEPS is the number of steps corresponding to the selected checkpoint you would like to export.
 
 Setting up the training environment was quite complicated, but the following two resources were very helpful in the process:
 
-[Tutorial - TensorFlow image recognition and object detection api](https://missinglink.ai/guides/tensorflow/tensorflow-image-recognition-object-detection-api-two-quick-tutorials/)
-Tutorial (Youtube) - How to train an Object Detection Classifier (https://www.youtube.com/watch?v=Rgpfk6eYxJA)
+- [Tutorial - TensorFlow image recognition and object detection api](https://missinglink.ai/guides/tensorflow/tensorflow-image-recognition-object-detection-api-two-quick-tutorials/)
+- [Tutorial (Youtube) - How to train an Object Detection Classifier] (https://www.youtube.com/watch?v=Rgpfk6eYxJA)
 
-Training was done on a Lenovo L340 laptop with an Nvidia GeForce GTX 1050 GPU and an Intel i7 CPU with 8 GB RAM, for 20429 steps. The process was followed using Tensorboard:
+Training was done on a Lenovo L340 laptop with an Nvidia GeForce GTX 1050 GPU, Intel i7 CPU with 8 GB RAM, for 20429 steps. The process was followed using Tensorboard:
 
-adam@adam-ubuntu:~$ tensorboard --logdir=<TRAINING_DIR>
+```tensorboard --logdir=<TRAINING_DIR>```
 
 ![](imgs/tensorboard.png)
 
