@@ -116,7 +116,13 @@ For the real world data we had to extract images from shared ROS bag files. To g
 
 In this project we have skipped the explained data collection by re-using already available data (s. references section above).
 
-**Object Detection Model**
+**Object Detection and Classification Model**
+
+For the traffic light detection and classification we are using a combined approach toward detection and classification. Basically you can separate detection and classification and use two neural networks or even mix machine learning and hard coded solutions (e.g. SSD and hard coded classifier). On the other hand you can combine detection and classification into one neural network. We are using Faster R-CNN which consists of following parts: a region proposal network, region of interest pooling and finally classification and linear regression. You can find more information about Faster R-CNN in the articles linked in the references chapter above.
+
+We used a pre-trained model, froze most of the layers and retrained only the classification layers to classify red, yellow and green traffic lights solely. After training on GPU for a long time we achieved the performance needed. Particularly we had to train two separate models for simulator and real-world data.
+
+In the beginning we had serious latency problems (car passed red lights), but we fixed them by.... **TODO: Complete...** 
 
 ### TODO: Add here an explanation of the model we used (architecture, training, ...).
 
