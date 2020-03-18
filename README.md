@@ -120,7 +120,8 @@ For the traffic light detection and classification we are using a combined appro
 
 We used a pre-trained model, froze most of the layers and retrained only the classification layers to classify red, yellow and green traffic lights solely. We trained a single model on both simulator and real-world data.
 
-The traffic light classifier was created by retraining an existing model from the [TensorFlow Object Detection Model Zoo](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md). We chose the "Faster R-CNN" model, because its' performance was good on traffic lights, and it was still fast enough to use in our application.
+The traffic light classifier was created by retraining an existing model from the [TensorFlow Object Detection Model Zoo](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md). We chose the "Faster R-CNN" model, because its accuracy was good on traffic lights and it was still fast enough to use in our
+application.
 
 To retrain the model, the following steps were made:
 - Clone the 1.5 branch of [tensorflow/models](https://github.com/tensorflow/models)
