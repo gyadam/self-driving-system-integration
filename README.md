@@ -106,7 +106,7 @@ Our task was to implement the Traffic Light Detection Node, the Waypoint Updater
 
 The Traffic Light Node is responsible for handling the traffic lights. It subscribes to the `base_waypoints` ROS topic (all waypoints of the track), the `image_color` ROS topic (image stream of the camera) and the `current_pose` ROS topic (position data to determine the current location). We also used the `/vehicle/traffic_lights` ROS node for testing purposes which delivers us information about all traffic lights from the simulator. The Traffic Light Node only publishes the index of the waypoint of the next upcoming red light's stop line to the `traffic_waypoint` ROS topic.
 
-We used a Neural Network approach to the traffic light detection and classification problem. Initially we implemented [RetinaNET](https://towardsdatascience.com/review-retinanet-focal-loss-object-detection-38fba6afabe4) which worked really good but unfortunately is not compatible with the TensorFlow version (1.3) required by the real testing vehicle (Carla). So we went back to an older approach to the problem: **TODO: More information about our current approach.**
+We used a Neural Network approach to the traffic light detection and classification problem. Initially we implemented [RetinaNET](https://towardsdatascience.com/review-retinanet-focal-loss-object-detection-38fba6afabe4) which worked really good but unfortunately is not compatible with the TensorFlow version (1.3) required by the real testing vehicle (Carla). So we went a step back to an older approach to the problem: Faster R-CNN.
 
 **Data collection**
 
