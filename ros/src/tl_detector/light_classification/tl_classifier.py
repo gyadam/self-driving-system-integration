@@ -14,6 +14,9 @@ from PIL import Image
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
 
+config = tf.ConfigProto()
+config.gpu_options.per_process_gpu_memory_fraction = 0.5
+
 ckpt_path = '../../../classifier/model/frozen_inference_graph_faster_rcnn_v2.pb'
 
 class TLClassifier(object):
@@ -31,7 +34,7 @@ class TLClassifier(object):
         self.detection_classes = self.detection_graph.get_tensor_by_name('detection_classes:0')
         
         with self.detection_graph.as_default():
-            self.sess = tf.Session(graph=self.detection_graph)
+            self.sess = tf.Session(graph=self.detection_graph, config=config)
         
     def load_image_into_numpy_array(self, image):
         return np.array(image.getdata()).reshape(image.shape).astype(np.uint8)
