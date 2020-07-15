@@ -4,8 +4,8 @@ Final (Capstone) Project for [Udacity's Self-Driving Car Engineer Nanodegree](ht
 
 ## Introducing
 
-The goal of this project was to use every bit of knowledge from Udacity's Self-Driving Car Engineer Nanodegree and use it to control a real self-driving car on a test-track in San Francisco, California.
-The project is based on the [Robot Operating System](https://en.wikipedia.org/wiki/Robot_Operating_System) (short: ROS) which is a framework mostly used in the fields of robotics and autonomous systems.
+The goal of this project was to use every bit of knowledge from Udacity's Self-Driving Car Engineer Nanodegree and use it to control a real self-driving car on a test track in San Francisco, California.
+The project was built on the [Robot Operating System](https://en.wikipedia.org/wiki/Robot_Operating_System) (short: ROS) which is a framework mostly used in the fields of robotics and autonomous systems.
 
 
 ## Team
